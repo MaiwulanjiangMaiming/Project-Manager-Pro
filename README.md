@@ -128,6 +128,10 @@ Project-Manager-X/
 | `/` | Focus search |
 | `Escape` | Clear search / go back |
 
+## Feedback & Reviews
+
+If you find Project Manager X Pro helpful, please consider leaving a review on the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=MaiwulanjiangMaiming.project-manager-x) or [Open VSX](https://open-vsx.org/extension/maiwulanjiangmaiming/project-manager-x). Your feedback helps improve the extension and reach more developers. Found a bug or have a feature idea? [Open an issue](https://github.com/MaiwulanjiangMaiming/Project-Manager-X/issues) — every suggestion matters!
+
 ## Contributing
 
 Contributions welcome! Please read our [contributing guidelines](https://github.com/MaiwulanjiangMaiming/Project-Manager-X/blob/main/CONTRIBUTING.md).
