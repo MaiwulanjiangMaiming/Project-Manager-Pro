@@ -6,6 +6,4 @@ out/
 .DS_Store
 Thumbs.db
 *.log
-.trae/
-.claude/
 test_files/

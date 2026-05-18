@@ -13,11 +13,7 @@
   </a>
 </p>
 
-<p align="center"><strong>Manage projects beautifully. Switch effortlessly.</strong></p>
-
 A powerful VS Code extension for managing projects with tags, tasks, milestones, and lifecycle tracking. Import from multiple IDEs including VS Code, Trae, Cursor, and Windsurf.
-
-> 🚀 **Try it out!** I'd love your feedback. If you find bugs or have feature ideas, please [open an issue](https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro/issues). Every suggestion helps make this better!
 
 ## Features
 
