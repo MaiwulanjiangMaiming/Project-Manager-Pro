@@ -1,19 +1,23 @@
 # Project Manager Pro
 
 <p align="center">
-  <img src="resources/icon.png" alt="Project Manager Pro Logo" width="120"/>
+  <img src="resources/icon.png" alt="Project Manager Pro Logo" width="180"/>
 </p>
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=MaiwulanjiangMaiming.project-manager-pro">
-    <img src="https://img.shields.io/badge/VS%20Code-Marketplace-blue?logo=visual-studio-code" alt="VS Code Marketplace"/>
+    <img src="https://img.shields.io/badge/VS%20Code-Marketplace-blue?logo=visual-studio-code" alt="VS Code Marketplace" height="24"/>
   </a>
   <a href="https://open-vsx.org/extension/maiwulanjiangmaiming/project-manager-pro">
-    <img src="https://img.shields.io/open-vsx/v/maiwulanjiangmaiming/project-manager-pro?label=Open%20VSX&style=flat&color=2C2255&logo=open-vsx" alt="Open VSX Version"/>
+    <img src="https://img.shields.io/open-vsx/v/maiwulanjiangmaiming/project-manager-pro?label=Open%20VSX&style=flat&color=2C2255&logo=open-vsx" alt="Open VSX Version" height="24"/>
   </a>
 </p>
 
+<p align="center"><strong>Manage projects beautifully. Switch effortlessly.</strong></p>
+
 A powerful VS Code extension for managing projects with tags, tasks, milestones, and lifecycle tracking. Import from multiple IDEs including VS Code, Trae, Cursor, and Windsurf.
+
+> 🚀 **Try it out!** I'd love your feedback. If you find bugs or have feature ideas, please [open an issue](https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro/issues). Every suggestion helps make this better!
 
 ## Features
 
