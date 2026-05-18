@@ -41,7 +41,7 @@ function ProjectCard({
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
 
   const projectTags = tags.filter(t => project.tags.includes(t.id));
-  const iconInfo = PROJECT_ICONS[project.type] || PROJECT_ICONS.favorite;
+  const iconInfo = PROJECT_ICONS[project.type] || PROJECT_ICONS.any;
   const isRemote = project.remote || ['ssh', 'docker', 'wsl', 'devcontainer', 'codespaces'].includes(project.type);
 
   const handleSaveEdit = () => {

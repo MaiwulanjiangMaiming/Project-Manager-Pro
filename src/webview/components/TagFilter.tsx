@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Project, Tag, TAG_COLORS } from '../../types';
 
 interface TagFilterProps {
@@ -29,6 +29,19 @@ export default function TagFilter({ tags, projects, draggedProjectId, selectedTa
   const [editTagName, setEditTagName] = useState('');
   const [editTagColor, setEditTagColor] = useState('');
   const [editShowCustomColor, setEditShowCustomColor] = useState(false);
+  const [menuTagId, setMenuTagId] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuTagId) return;
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuTagId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [menuTagId]);
 
   const handleAddTag = () => {
     const color = showCustomColor && customColor ? customColor : selectedColor;
@@ -105,6 +118,7 @@ export default function TagFilter({ tags, projects, draggedProjectId, selectedTa
     setEditTagName(tag.name);
     setEditTagColor(tag.color);
     setEditShowCustomColor(!TAG_COLORS.includes(tag.color));
+    setMenuTagId(null);
   };
 
   const cancelEditTag = () => {
@@ -120,6 +134,11 @@ export default function TagFilter({ tags, projects, draggedProjectId, selectedTa
     const color = editShowCustomColor && editTagColor && isValidColor(editTagColor) ? editTagColor : editTagColor;
     onUpdateTag({ ...tag, name: editTagName.trim(), color });
     cancelEditTag();
+  };
+
+  const handleTagClick = (tagId: string) => {
+    if (editingTagId === tagId) return;
+    onSelectTag(tagId);
   };
 
   return (
@@ -197,43 +216,61 @@ export default function TagFilter({ tags, projects, draggedProjectId, selectedTa
                     borderColor: tag.color,
                     backgroundColor: selectedTag === tag.id ? tag.color : 'transparent'
                   }}
-                  onClick={() => onSelectTag(tag.id)}
+                  onClick={() => handleTagClick(tag.id)}
                 >
                   <span
                     className="tag-dot"
                     style={{ backgroundColor: tag.color }}
                   />
                   {tag.name}
+                  <span
+                    className="tag-menu-trigger"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMenuTagId(menuTagId === tag.id ? null : tag.id);
+                    }}
+                    data-tip={`Options for "${tag.name}"`}
+                  >
+                    <svg viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M8 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0-6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                  </span>
                 </button>
                 {dragOverTag === tag.id && (
                   <span className={`tag-drop-hint ${dragOverAction}`}>
                     {dragOverAction === 'remove' ? '✕ Remove' : '✓ Add'}
                   </span>
                 )}
-                <button
-                  className="tag-edit"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    startEditTag(tag);
-                  }}
-                  data-tip={`Edit tag "${tag.name}"`}
-                >
-                  <svg viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M11.013 1.427a1.75 1.75 0 012.474 0l1.086 1.086a1.75 1.75 0 010 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 01-.927-.928l.929-3.25c.081-.286.235-.547.445-.756l8.61-8.61zm1.414 1.06a.25.25 0 00-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 000-.354l-1.086-1.086zM11.189 6.25L9.75 4.81l-6.286 6.287a.25.25 0 00-.067.108l-.97 3.394 3.394-.97a.249.249 0 00.108-.067L11.189 6.25z"/>
-                  </svg>
-                </button>
-                <button
-                  className="tag-delete"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteTag(tag.id);
-                  }}
-                  data-tip={`Delete tag "${tag.name}"`}
-                >
-                  <svg viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 0C3.58 0 0 3.58 0 8C0 12.42 3.58 16 8 16C12.42 16 16 12.42 16 8C16 3.58 12.42 0 8 0ZM11.71 10.29L10.29 11.71L8 9.41L5.71 11.71L4.29 10.29L6.59 8L4.29 5.71L5.71 4.29L8 6.59L10.29 4.29L11.71 5.71L9.41 8L11.71 10.29Z"/>
-                  </svg>
-                </button>
+                {menuTagId === tag.id && (
+                  <div className="tag-menu" ref={menuRef}>
+                    <button
+                      className="tag-menu-item"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        startEditTag(tag);
+                      }}
+                    >
+                      <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                      </svg>
+                      Edit
+                    </button>
+                    <button
+                      className="tag-menu-item danger"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setMenuTagId(null);
+                        onDeleteTag(tag.id);
+                      }}
+                    >
+                      <svg viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>

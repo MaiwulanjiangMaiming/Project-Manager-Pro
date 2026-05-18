@@ -1,68 +1,84 @@
 # Project Manager Pro
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/MaiwulanjiangMaiming/Project-Manager-Pro/main/resources/icon.png" alt="Project Manager Pro Logo" width="120"/>
+  <img src="resources/icon.png" alt="Project Manager Pro Logo" width="120"/>
 </p>
 
 <p align="center">
-  <a href="https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro">
-    <img src="https://img.shields.io/badge/GitHub-Project--Manager--Pro-181717?logo=github" alt="GitHub"/>
+  <a href="https://marketplace.visualstudio.com/items?itemName=MaiwulanjiangMaiming.project-manager-pro">
+    <img src="https://img.shields.io/badge/VS%20Code-Marketplace-blue?logo=visual-studio-code" alt="VS Code Marketplace"/>
+  </a>
+  <a href="https://open-vsx.org/extension/maiwulanjiangmaiming/project-manager-pro">
+    <img src="https://img.shields.io/open-vsx/v/maiwulanjiangmaiming/project-manager-pro?label=Open%20VSX&style=flat&color=2C2255&logo=open-vsx" alt="Open VSX Version"/>
   </a>
 </p>
 
-A powerful VS Code extension for managing your projects with tags, tasks, milestones, and smart organization.
+A powerful VS Code extension for managing projects with tags, tasks, milestones, and lifecycle tracking. Import from multiple IDEs including VS Code, Trae, Cursor, and Windsurf.
 
 ## Features
 
 - **Project Management**: Save, organize, and quickly switch between projects
-- **Tag System**: Color-coded tags with drag-and-drop assignment
-- **Task Management**: Create, track, and manage tasks with priorities and categories
-- **Milestones**: Track project progress with deadline-based milestones
-- **Smart Sorting**: Sort by name, path, recent access, priority, or custom order
-- **Auto Detection**: Automatically discover Git repositories and VS Code workspaces
-- **Lifecycle Tracking**: Auto-infer project status (idea, planning, active, maintenance, archived)
-- **Global Task View**: See all tasks across projects in one place
-- **Context Snapshots**: Save and restore project context (active files, git branch, notes)
+- **Tags System**: Color-coded tags with drag-and-drop assignment
+- **Task Management**: Create tasks with categories, priorities, and status tracking
+- **Milestones**: Track project milestones with progress indicators
+- **Lifecycle Tracking**: Automatic lifecycle inference (idea → planning → active → maintenance → archived)
+- **Global Task View**: View and manage tasks across all projects
+- **Context Snapshots**: Save and restore project context
 - **Changelog**: Track project changes with versioned entries
-- **Import**: Import projects from other Project Manager extensions
+- **Notes**: Rich text notes for each project
+- **Multi-IDE Import**: Import from VS Code, Trae, Trae CN, Cursor, Windsurf
+- **Custom Sorting**: Drag to reorder projects in custom mode
+- **Batch Operations**: Select and delete multiple projects at once
+- **Keyboard Navigation**: Full keyboard support with arrow keys and shortcuts
+
+## Installation
+
+### From VS Code Marketplace
+
+Search for **"Project Manager Pro"** in the Extensions view (`Cmd+Shift+X`)
+
+### From VSIX File
+
+1. Download the `.vsix` file from [Releases](https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro/releases)
+2. Open VS Code → Extensions (`Cmd+Shift+X`)
+3. Click "..." menu → **"Install from VSIX"**
+4. Select the downloaded file
 
 ## Quick Start
 
-1. Install the extension from VS Code Marketplace
-2. Open the **Project Manager Pro** view in the sidebar
-3. Click **Save Current Project** to add your first project
-4. Use **Scan for Projects** to auto-discover existing repositories
+1. Open a workspace in VS Code
+2. Click **"Save Current Project"** in the Project Manager Pro sidebar
+3. Add tags to organize your projects
+4. Create tasks and milestones to track progress
 
 ## Usage
 
 ### Managing Projects
 
-- **Save Project**: Save the current workspace as a project
-- **Open Project**: Click to open, double-click to open in new window
-- **Reorder**: Drag and drop to set custom order (switches to Custom sort)
-- **Manage Mode**: Select multiple projects for batch deletion
-- **Tags**: Drag projects onto tags to assign, drag again to remove
-
-### Tasks
-
-- Create tasks with categories (bug, feature, refactor, docs, research, chore, experiment)
-- Set priorities (critical, high, medium, low)
-- Track status: backlog → todo → in_progress → review → done
-- Use **Global Tasks** to see all tasks across projects
+- **Save Project**: Click the save button to add the current workspace
+- **Open Project**: Click on a project to open it
+- **Reorder**: Drag projects to reorder (switches to Custom sort mode)
+- **Batch Delete**: Click "Manage" → select projects → "Delete Selected"
 
 ### Tags
 
-- Create color-coded tags
-- Edit tag name and color by clicking the pencil icon
-- Reorder tags by dragging
-- Filter projects by clicking a tag
+- **Create Tag**: Click "+" in the tags section
+- **Edit Tag**: Hover over a tag and click the pencil icon
+- **Assign Tag**: Drag a project onto a tag
+- **Remove Tag**: Drag a project onto an already-assigned tag
 
-### Settings
+### Tasks
 
-- `projectManagerPro.autoDetect`: Auto-detect projects on startup
-- `projectManagerPro.showGitStatus`: Show Git branch in project card
-- `projectManagerPro.compactView`: Default to compact view mode
-- `projectManagerPro.enableReminders`: Enable task deadline reminders
+- **Create Task**: Open a project → Tasks tab → "New Task"
+- **Categories**: bug, feature, refactor, docs, research, chore, experiment
+- **Priorities**: critical, high, medium, low
+- **Status**: backlog, todo, in_progress, review, done, blocked, cancelled
+
+### Import from Other IDEs
+
+1. Click "Import from Project Manager"
+2. Select the IDE (VS Code, Trae, Cursor, etc.)
+3. Choose which projects to import
 
 ## Configuration
 
@@ -75,54 +91,57 @@ A powerful VS Code extension for managing your projects with tags, tasks, milest
 }
 ```
 
-## Import from Other Extensions
-
-Import projects from:
-- VS Code Project Manager (alefragnani)
-- Trae / Trae CN
-- Cursor
-- Windsurf
-
-The extension automatically detects installed IDEs and their project data.
-
 ## Architecture
 
 ```
-Project Manager Pro/
+Project-Manager-Pro/
 ├── src/
-│   ├── extension.ts          # Main entry point
+│   ├── extension.ts          # Main entry
 │   ├── core/                 # Core modules
 │   │   ├── storage.ts        # Data persistence
 │   │   ├── projectManager.ts # Business logic
 │   │   ├── container.ts      # Dependency injection
 │   │   ├── migrations.ts     # Data migrations
 │   │   ├── backup.ts         # Auto backup
-│   │   ├── smartWatcher.ts   # File watcher
+│   │   ├── smartWatcher.ts   # File watching
 │   │   ├── statusBar.ts      # Status bar integration
 │   │   └── reminderSystem.ts # Task reminders
-│   ├── commands/             # VS Code commands
-│   ├── webview/              # React frontend
-│   │   ├── store/            # Zustand state
-│   │   ├── components/       # UI components
-│   │   └── styles/           # CSS
-│   └── types/                # TypeScript types
-├── dist/                     # Build output
-└── README.md
+│   ├── commands/             # Command handlers
+│   ├── types/                # Type definitions
+│   └── webview/              # React frontend
+│       ├── store/            # Zustand state
+│       ├── rpc/              # Type-safe RPC
+│       ├── components/       # UI components
+│       └── styles/           # CSS
+├── build.js                  # Build script
+└── package.json
 ```
+
+## Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `↑` / `↓` | Navigate projects |
+| `Enter` | Open selected project |
+| `Ctrl+Enter` | Open in new window |
+| `Delete` | Delete selected project |
+| `/` | Focus search |
+| `Escape` | Clear search / go back |
 
 ## Contributing
 
-Contributions welcome! Please open an issue or submit a pull request.
+Contributions welcome! Please read our [contributing guidelines](https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro/blob/main/CONTRIBUTING.md).
 
 ## License
 
-MIT License
+GPL-3.0 License
 
 ## Contact
 
-- GitHub: [MaiwulanjiangMaiming/Project-Manager-Pro](https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro)
-- Report issues: [GitHub Issues](https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro/issues)
+For feature requests or bug reports:
+- [GitHub Issues](https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro/issues)
+- Email: mawlan.momin@gmail.com
 
 ---
 
-**Organize your projects like a pro!**
+**Enjoy managing your projects!**

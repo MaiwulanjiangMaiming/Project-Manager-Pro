@@ -1,3 +1,9 @@
+/**
+ * Project Manager Pro
+ * Copyright (c) 2026 Maiwulanjiang Maiming <mawlan.momin@gmail.com>
+ * Licensed under GPL-3.0
+ */
+
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';

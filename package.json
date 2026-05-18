@@ -3,7 +3,21 @@
   "displayName": "Project Manager Pro",
   "description": "Modern project manager with drag-and-drop, tags, and beautiful UI",
   "version": "1.0.0",
-  "publisher": "custom",
+  "publisher": "MaiwulanjiangMaiming",
+  "author": {
+    "name": "Maiwulanjiang Maiming",
+    "email": "mawlan.momin@gmail.com"
+  },
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MaiwulanjiangMaiming/Project-Manager-Pro/issues"
+  },
+  "icon": "resources/icon.png",
   "engines": {
     "vscode": "^1.78.0"
   },
@@ -15,7 +29,10 @@
     "manager",
     "workspace",
     "folder",
-    "git"
+    "git",
+    "tags",
+    "tasks",
+    "multi-root"
   ],
   "activationEvents": [
     "onView:projectManagerPro",

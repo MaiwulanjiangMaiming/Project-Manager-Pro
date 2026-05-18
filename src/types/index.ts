@@ -1,4 +1,10 @@
-export type ProjectType = 'favorite' | 'git' | 'mercurial' | 'svn' | 'vscode' | 'any' | 'ssh' | 'docker' | 'wsl' | 'devcontainer' | 'codespaces';
+/**
+ * Project Manager Pro
+ * Copyright (c) 2026 Maiwulanjiang Maiming <mawlan.momin@gmail.com>
+ * Licensed under GPL-3.0
+ */
+
+export type ProjectType = 'git' | 'mercurial' | 'svn' | 'vscode' | 'any' | 'ssh' | 'docker' | 'wsl' | 'devcontainer' | 'codespaces';
 
 export type ProjectLifecycle = 'idea' | 'planning' | 'active' | 'maintenance' | 'archived';
 
@@ -263,7 +269,6 @@ export const DEFAULT_TAGS: Tag[] = [
 ];
 
 export const PROJECT_ICONS: Record<string, { icon: string; label: string; svg?: string; svgViewBox?: string }> = {
-  favorite: { icon: '⭐', label: 'Favorite' },
   git: {
     icon: '',
     label: 'Git Repository',
@@ -278,8 +283,8 @@ export const PROJECT_ICONS: Record<string, { icon: string; label: string; svg?: 
   },
   svn: { icon: '🗂️', label: 'SVN Repository' },
   vscode: { icon: '💻', label: 'VS Code Workspace' },
-  any: { icon: '📋', label: 'Any Folder' },
-  ssh: { icon: '🔐', label: 'SSH Remote' },
+  any: { icon: '📁', label: 'Folder' },
+  ssh: { icon: '🔗', label: 'SSH Remote' },
   docker: {
     icon: '',
     label: 'Docker Container',

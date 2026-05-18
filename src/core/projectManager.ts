@@ -1,3 +1,9 @@
+/**
+ * Project Manager Pro
+ * Copyright (c) 2026 Maiwulanjiang Maiming <mawlan.momin@gmail.com>
+ * Licensed under GPL-3.0
+ */
+
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -54,7 +60,51 @@ export class ProjectManager {
     const project = this.getProjects().find(p => p.id === projectId);
     if (!project) return;
 
-    const uri = vscode.Uri.file(project.path);
+    let uri: vscode.Uri;
+    if (project.remote) {
+      switch (project.remote.type) {
+        case 'ssh':
+          uri = vscode.Uri.parse(`vscode-remote://ssh-remote+${project.remote.host}${project.path}`);
+          break;
+        case 'docker':
+          uri = vscode.Uri.parse(`vscode-remote://attached-container+${project.remote.container}${project.path}`);
+          break;
+        case 'wsl':
+          uri = vscode.Uri.parse(`vscode-remote://wsl+${project.remote.host}${project.path}`);
+          break;
+        case 'devcontainer':
+          uri = vscode.Uri.parse(`vscode-remote://dev-container+${project.remote.container}${project.path}`);
+          break;
+        case 'codespaces':
+          uri = vscode.Uri.parse(`vscode-remote://codespaces+${project.remote.host}${project.path}`);
+          break;
+        default:
+          uri = vscode.Uri.file(project.path);
+      }
+    } else if (['ssh', 'docker', 'wsl', 'devcontainer', 'codespaces'].includes(project.type)) {
+      switch (project.type) {
+        case 'ssh':
+          uri = vscode.Uri.parse(`vscode-remote://ssh-remote+${project.path}`);
+          break;
+        case 'docker':
+          uri = vscode.Uri.parse(`vscode-remote://attached-container+${project.path}`);
+          break;
+        case 'wsl':
+          uri = vscode.Uri.parse(`vscode-remote://wsl+${project.path}`);
+          break;
+        case 'devcontainer':
+          uri = vscode.Uri.parse(`vscode-remote://dev-container+${project.path}`);
+          break;
+        case 'codespaces':
+          uri = vscode.Uri.parse(`vscode-remote://codespaces+${project.path}`);
+          break;
+        default:
+          uri = vscode.Uri.file(project.path);
+      }
+    } else {
+      uri = vscode.Uri.file(project.path);
+    }
+
     if (newWindow) {
       await vscode.commands.executeCommand('vscode.openFolder', uri, true);
     } else {
@@ -750,15 +800,106 @@ export class ProjectManager {
 
       for (const item of data) {
         if (!item.name || !item.rootPath) continue;
-        if (existing.some(e => e.path === item.rootPath)) continue;
+
+        let projectPath = item.rootPath.replace(/^~/, os.homedir()).replace(/^\$home/, os.homedir());
+        if (existing.some(e => e.path === projectPath)) continue;
+
+        let projectType: Project['type'] = 'any';
+        let remoteInfo: Project['remote'] = undefined;
+
+        if (item.groupName === 'Favorites') {
+          projectType = 'git';
+        }
+
+        if (projectPath.startsWith('vscode-remote://')) {
+          const remoteMatch = projectPath.match(/^vscode-remote:\/\/([^+]+)\+(.+)$/);
+          if (remoteMatch) {
+            const remoteScheme = remoteMatch[1];
+            const remotePath = remoteMatch[2];
+            let remoteType: NonNullable<Project['remote']>['type'] = 'ssh';
+            let host: string | undefined = undefined;
+            let container: string | undefined = undefined;
+            let fsPath = projectPath;
+
+            switch (remoteScheme) {
+              case 'ssh-remote': {
+                remoteType = 'ssh';
+                const firstSlash = remotePath.indexOf('/');
+                if (firstSlash > 0) {
+                  host = remotePath.substring(0, firstSlash);
+                  fsPath = remotePath.substring(firstSlash);
+                } else {
+                  host = remotePath;
+                  fsPath = '/';
+                }
+                break;
+              }
+              case 'attached-container': {
+                remoteType = 'docker';
+                const firstSlash = remotePath.indexOf('/');
+                if (firstSlash > 0) {
+                  container = remotePath.substring(0, firstSlash);
+                  fsPath = remotePath.substring(firstSlash);
+                } else {
+                  container = remotePath;
+                  fsPath = '/';
+                }
+                break;
+              }
+              case 'wsl': {
+                remoteType = 'wsl';
+                const firstSlash = remotePath.indexOf('/');
+                if (firstSlash > 0) {
+                  host = remotePath.substring(0, firstSlash);
+                  fsPath = remotePath.substring(firstSlash);
+                } else {
+                  host = remotePath;
+                  fsPath = '/';
+                }
+                break;
+              }
+              case 'dev-container': {
+                remoteType = 'devcontainer';
+                const firstSlash = remotePath.indexOf('/');
+                if (firstSlash > 0) {
+                  container = remotePath.substring(0, firstSlash);
+                  fsPath = remotePath.substring(firstSlash);
+                } else {
+                  container = remotePath;
+                  fsPath = '/';
+                }
+                break;
+              }
+              case 'codespaces': {
+                remoteType = 'codespaces';
+                const firstSlash = remotePath.indexOf('/');
+                if (firstSlash > 0) {
+                  host = remotePath.substring(0, firstSlash);
+                  fsPath = remotePath.substring(firstSlash);
+                } else {
+                  host = remotePath;
+                  fsPath = '/';
+                }
+                break;
+              }
+            }
+
+            remoteInfo = { type: remoteType, host, container };
+            projectType = remoteType;
+            projectPath = fsPath;
+          }
+        } else if (fs.existsSync(path.join(projectPath, '.git'))) {
+          projectType = 'git';
+        }
 
         const project: Project = {
           id: `imported-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           name: item.name,
-          path: item.rootPath.replace(/^~/, os.homedir()).replace(/^\$home/, os.homedir()),
+          path: projectPath,
           tags: [],
           enabled: item.enabled !== false,
-          type: 'favorite',
+          type: projectType,
+          remote: remoteInfo,
           lifecycle: inferLifecycle(Date.now()),
           lastOpened: item.lastOpened
         };
